@@ -16,7 +16,7 @@ Gunicorn: WSGI-сервер для запуска приложения - FastAPI
 ## Getting Started
 1. **Clone Repository:**
    ```bash
-    git clone https://github.com/ItSoda/FastAPITestTask.git
+    git clone https://github.com/ItSoda/StudentLab.git
     cd FastAPITestTask
 2. **Set Up Docker Environment:**
    ```bash
