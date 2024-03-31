@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  postgresql:
+    image: postgres
+    restart: always
+    container_name: postgresql-fastapi
+    environment:
+      POSTGRES_DATABASE: fastapi_db
+      POSTGRES_USER: fastapi_user
+      POSTGRES_PASSWORD: fastapi_password
+    volumes:
+      - postgres_data:/usr/bin/postgresql/data
+
+  api:
+    build: .
+    image: fastapi
+    command:
+      - sh
+      - -c
+      - |
+        dockerize -wait tcp://postgresql:5432 -timeout 60s &&
+        poetry run alembic upgrade head &&
+        poetry run gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000 
+    env_file:
+      - docker-compose.env
+    environment:
+      - DOCKER_CONTAINER=True
+    depends_on:
+      - postgresql
+    volumes:
+      - .:/itsoda
+    container_name: fastapi
+    ports:
+      - "8000:8000"
+
+
+volumes:
+  postgres_data: null
